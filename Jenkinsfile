@@ -133,7 +133,7 @@ pipeline {
             }
         }
 
-        stage('Docker Image Cleanup') {
+        /*stage('Docker Image Cleanup') {
             agent any
             when { expression { params.action == 'create' } }
             steps {
@@ -143,6 +143,6 @@ pipeline {
                                        "${params.DockerHubUser}")
                 }
             }
-        }
+        }*/
     }
 }
