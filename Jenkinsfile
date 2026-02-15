@@ -112,7 +112,12 @@ pipeline {
         }
     }
     steps {
-        sh "trivy image ${params.DockerHubUser}/${params.ImageName}:${params.ImageTag}"
+        sh """
+        mkdir -p .trivycache
+        trivy image \
+          --cache-dir .trivycache \
+          ${params.DockerHubUser}/${params.ImageName}:${params.ImageTag}
+        """
     }
 }
 
