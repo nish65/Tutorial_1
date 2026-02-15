@@ -91,11 +91,24 @@ pipeline {
 
         //Instead of installing trivy in the jenkins container, I been directly downloading from the docker image(very effective approach)
 
-        stage('Docker Image Scan') {
+        /*stage('Docker Image Scan') {
     agent {
         docker {
             image 'aquasec/trivy:latest'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+    steps {
+        sh "trivy image ${params.DockerHubUser}/${params.ImageName}:${params.ImageTag}"
+    }
+}*/
+   //Above stage was failing due to Ignore image ENTRYPOINT and Allow Jenkins to run its own shell command
+
+        stage('Docker Image Scan') {
+    agent {
+        docker {
+            image 'aquasec/trivy:latest'
+            args '--entrypoint="" -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
     steps {
