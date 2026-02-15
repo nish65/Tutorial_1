@@ -77,7 +77,7 @@ pipeline {
             }
         }
 
-        stage('Docker Image Scan') {
+        /*stage('Docker Image Scan') {
             agent any
             when { expression { params.action == 'create' } }
             steps {
@@ -87,7 +87,21 @@ pipeline {
                                     "${params.DockerHubUser}")
                 }
             }
+        } */
+
+        //Instead of installing trivy in the jenkins container, I been directly downloading from the docker image(very effective approach)
+
+        stage('Docker Image Scan') {
+    agent {
+        docker {
+            image 'aquasec/trivy:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
+    }
+    steps {
+        sh "trivy image ${params.DockerHubUser}/${params.ImageName}:${params.ImageTag}"
+    }
+}
 
         stage('Docker Image Push') {
             agent any
